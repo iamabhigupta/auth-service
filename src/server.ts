@@ -1,5 +1,10 @@
 const login = (username: string): string => {
-   return username;
+   const user = {
+      name: "Abhsiehk",
+   };
+
+   const name = user.name;
+   return username + name;
 };
 
 login("Abhsihek");
