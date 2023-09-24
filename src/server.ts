@@ -1,10 +1,15 @@
-const login = (username: string): string => {
-   const user = {
-      name: "Abhsiehk",
-   };
+/* eslint-disable no-console */
+import app from "./app";
+import { Config } from "./config";
 
-   const name = user.name;
-   return username + name;
+const startServer = () => {
+   const { PORT } = Config;
+   try {
+      app.listen(PORT, () => console.log(`Listing on Port:${PORT}`));
+   } catch (error) {
+      console.log(error);
+      process.exit(1);
+   }
 };
 
-login("Abhsihek");
+startServer();
