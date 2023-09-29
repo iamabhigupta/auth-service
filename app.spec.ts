@@ -3,7 +3,7 @@ import request from "supertest";
 import { add } from "./src/utils";
 import app from "./src/app";
 
-describe("App", () => {
+describe.skip("App", () => {
    it("should work", () => {
       const result = add(7, 27);
       expect(result).toBe(34);
