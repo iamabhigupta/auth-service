@@ -1,6 +1,5 @@
-function login(user: string): boolean {
-  const s = 5;
-  return true;
+function login(user: string): string {
+  return "Abhi" + user;
 }
 
-login('Abhishek');
+login("Abhishek");
