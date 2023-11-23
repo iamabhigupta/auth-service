@@ -6,7 +6,7 @@ import { Config } from ".";
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: Config.DB_HOST,
-  port: Number(Config.PORT),
+  port: Number(Config.DB_PORT),
   username: Config.DB_USERNAME,
   password: Config.DB_PASSWORD,
   database: Config.DB_NAME,
