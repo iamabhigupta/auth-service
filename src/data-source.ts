@@ -9,7 +9,8 @@ export const AppDataSource = new DataSource({
   username: "test",
   password: "test",
   database: "test",
-  synchronize: true,
+  // Dont use this. Alway false
+  synchronize: false,
   logging: false,
   entities: [User],
   migrations: [],
