@@ -13,6 +13,7 @@ describe("POST /auth/register", () => {
   });
 
   beforeEach(async () => {
+    // Database truncate
     await connection.dropDatabase();
     await connection.synchronize();
   });
@@ -87,8 +88,8 @@ describe("POST /auth/register", () => {
 
       // Assert
       expect(response.body).toHaveProperty("id");
-      const userRepository = connection.getRepository(User);
-      const users = await userRepository.find();
+      const repository = connection.getRepository(User);
+      const users = await repository.find();
       expect((response.body as Record<string, string>).id).toBe(users[0].id);
     });
 
@@ -110,7 +111,7 @@ describe("POST /auth/register", () => {
       expect(users[0].role).toBe(Roles.CUSTOMER);
     });
 
-    it("should store the hashed password to the database", async () => {
+    it("should store the hashed password in the database", async () => {
       // Arrange
       const userData = {
         firstName: "Rakesh",
@@ -126,10 +127,10 @@ describe("POST /auth/register", () => {
       const users = await userRepository.find();
       expect(users[0].password).not.toBe(userData.password);
       expect(users[0].password).toHaveLength(60);
-      expect(users[0].password).toMatch(/^\$2[a|b]\$\d+\$/);
+      expect(users[0].password).toMatch(/^\$2b\$\d+\$/);
     });
 
-    it("should return 400 status code if emails is already exists", async () => {
+    it("should return 400 status code if email is already exists", async () => {
       // Arrange
       const userData = {
         firstName: "Rakesh",
@@ -137,15 +138,16 @@ describe("POST /auth/register", () => {
         email: "rakesh@mern.space",
         password: "secret",
       };
-      // Act
       const userRepository = connection.getRepository(User);
       await userRepository.save({ ...userData, role: Roles.CUSTOMER });
+
+      // Act
       const response = await request(app).post("/auth/register").send(userData);
 
-      // Assert
       const users = await userRepository.find();
-      expect(response.status).toBe(400);
-      expect(users.length).toBe(1);
+      // Assert
+      expect(response.statusCode).toBe(400);
+      expect(users).toHaveLength(1);
     });
   });
   describe("Fields are missing", () => {
@@ -157,15 +159,35 @@ describe("POST /auth/register", () => {
         email: "",
         password: "secret",
       };
-
       // Act
       const response = await request(app).post("/auth/register").send(userData);
+      // console.log("response", response.error);
+
+      // Assert
+      expect(response.statusCode).toBe(400);
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      expect(users).toHaveLength(0);
+    });
+  });
+
+  describe("Fields are not in proper format", () => {
+    it("should trim the email field", async () => {
+      // Arrange
+      const userData = {
+        firstName: "Rakesh",
+        lastName: "K",
+        email: " rakesh@mern.space ",
+        password: "password",
+      };
+      // Act
+      await request(app).post("/auth/register").send(userData);
 
       // Assert
       const userRepository = connection.getRepository(User);
       const users = await userRepository.find();
-      expect(response.status).toBe(400);
-      expect(users).toHaveLength(0);
+      const user = users[0];
+      expect(user.email).toBe("rakesh@mern.space");
     });
   });
 });
