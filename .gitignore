@@ -133,3 +133,5 @@ dist
 .pnp.*
 
 certs/
+
+public/
