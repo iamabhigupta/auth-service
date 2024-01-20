@@ -98,5 +98,26 @@ describe("GET /auth/self", () => {
       // check if user id matches with registed user
       expect(response.body).not.toHaveProperty("password");
     });
+
+    it("should return 401 status code if token does not exists", async () => {
+      // Register user
+      const userData = {
+        firstName: "Abhishek",
+        lastName: "Gupta",
+        email: "abhishek@codersgyan.com",
+        password: "password",
+      };
+
+      const userRepository = connection.getRepository(User);
+      await userRepository.save({
+        ...userData,
+        role: Roles.CUSTOMER,
+      });
+
+      // Act
+      const response = await request(app).get("/auth/self").send();
+      // Assert
+      expect(response.statusCode).toBe(401);
+    });
   });
 });
