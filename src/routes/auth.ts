@@ -1,5 +1,4 @@
 import express, { NextFunction, Request, Response } from "express";
-
 import { AppDataSource } from "../config/data-source";
 import { logger } from "../config/logger";
 import { AuthController } from "../controllers/AuthController";
