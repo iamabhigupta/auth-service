@@ -8,6 +8,7 @@ import { TenantService } from "../services/TenantService";
 // import { TokenService } from "../services/TokenService";
 import { UserService } from "../services/UserService";
 import { logger } from "../config/logger";
+import authenticate from "../middlewares/authenticate";
 
 const router = express.Router();
 
@@ -24,8 +25,11 @@ const tenantController = new TenantController(
   logger,
 );
 
-router.post("/", (req: Request, res: Response, next: NextFunction) =>
-  tenantController.create(req, res, next),
+router.post(
+  "/",
+  authenticate,
+  (req: Request, res: Response, next: NextFunction) =>
+    tenantController.create(req, res, next),
 );
 
 export default router;
