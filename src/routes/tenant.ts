@@ -1,9 +1,31 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
+import { AppDataSource } from "../config/data-source";
+import { TenantController } from "../controllers/TenantController";
+// import { RefreshToken } from "../entity/RefreshToken";
+import { Tenant } from "../entity/Tenant";
+import { User } from "../entity/User";
+import { TenantService } from "../services/TenantService";
+// import { TokenService } from "../services/TokenService";
+import { UserService } from "../services/UserService";
+import { logger } from "../config/logger";
 
 const router = express.Router();
 
-router.post("/", (req, res) => {
-  res.status(201).json({});
-});
+const userRepository = AppDataSource.getRepository(User);
+const tenantRepository = AppDataSource.getRepository(Tenant);
+const userService = new UserService(userRepository);
+// const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
+// const tokenService = new TokenService(refreshTokenRepository);
+const tenantService = new TenantService(tenantRepository);
+
+const tenantController = new TenantController(
+  userService,
+  tenantService,
+  logger,
+);
+
+router.post("/", (req: Request, res: Response, next: NextFunction) =>
+  tenantController.create(req, res, next),
+);
 
 export default router;

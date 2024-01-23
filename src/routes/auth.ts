@@ -15,6 +15,7 @@ import validateRefreshToken from "../middlewares/validateRefreshToken";
 import parseRefreshToken from "../middlewares/parseRefreshToken";
 
 const router = express.Router();
+
 const userRepository = AppDataSource.getRepository(User);
 const userService = new UserService(userRepository);
 const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
