@@ -13,15 +13,15 @@ export class TenantController {
 
   async create(req: CreateTenantRequest, res: Response, next: NextFunction) {
     const { name, address } = req.body;
-    this.logger.debug("Request for creating tenant", req.body);
+    this.logger.debug("Request for creating a tenant", req.body);
 
     try {
       const tenant = await this.tenantService.create({ name, address });
       this.logger.info("Tenant has been created", { id: tenant.id });
 
       res.status(201).json({ id: tenant.id });
-    } catch (error) {
-      next(error);
+    } catch (err) {
+      next(err);
     }
   }
 
@@ -30,42 +30,57 @@ export class TenantController {
     const tenantId = req.params.id;
 
     if (isNaN(Number(tenantId))) {
-      next(createHttpError(400, "Invalid url params"));
+      next(createHttpError(400, "Invalid url param."));
+      return;
     }
 
     this.logger.debug("Request for updating a tenant", req.body);
 
     try {
-      await this.tenantService.update(Number(tenantId), { name, address });
+      await this.tenantService.update(Number(tenantId), {
+        name,
+        address,
+      });
+
       this.logger.info("Tenant has been updated", { id: tenantId });
 
-      res.status(201).json({ id: Number(tenantId) });
-    } catch (error) {
-      next(error);
+      res.json({ id: Number(tenantId) });
+    } catch (err) {
+      next(err);
     }
   }
 
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const tenants = await this.tenantService.getAll();
-      this.logger.info("All tenant have been fetched");
 
-      res.status(201).json(tenants);
-    } catch (error) {
-      next(error);
+      this.logger.info("All tenant have been fetched");
+      res.json(tenants);
+    } catch (err) {
+      next(err);
     }
   }
 
   async getById(req: Request, res: Response, next: NextFunction) {
     const tenantId = req.params.id;
 
+    if (isNaN(Number(tenantId))) {
+      next(createHttpError(400, "Invalid url param."));
+      return;
+    }
+
     try {
       const tenant = await this.tenantService.getById(Number(tenantId));
-      this.logger.info("Tenant have been fetched", { id: tenantId });
 
-      res.status(201).json(tenant);
-    } catch (error) {
-      next(error);
+      if (!tenant) {
+        next(createHttpError(400, "Tenant does not exist."));
+        return;
+      }
+
+      this.logger.info("Tenant has been fetched");
+      res.json(tenant);
+    } catch (err) {
+      next(err);
     }
   }
 

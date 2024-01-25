@@ -1,4 +1,5 @@
 import { NextFunction, Response } from "express";
+import createHttpError from "http-errors";
 import { Logger } from "winston";
 
 import { Roles } from "../constants";
@@ -27,6 +28,32 @@ export class UserController {
       this.logger.info("User has been created by ADMIN", { id: user.id });
 
       res.status(201).json({ id: user.id });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async update(req: CreateUserRequest, res: Response, next: NextFunction) {
+    const { firstName, lastName, role } = req.body;
+    const userId = req.params.id;
+
+    if (isNaN(Number(userId))) {
+      next(createHttpError(400, "Invalid url param."));
+      return;
+    }
+
+    this.logger.debug("Request for updating user", req.body);
+
+    try {
+      await this.userService.update(Number(userId), {
+        firstName,
+        lastName,
+        role,
+      });
+
+      this.logger.info("User has been updated by ADMIN", { id: userId });
+
+      res.status(201).json({ id: userId });
     } catch (error) {
       next(error);
     }
