@@ -40,4 +40,12 @@ router.get(
     tenantController.getAll(req, res, next),
 );
 
+router.get(
+  "/:id",
+  authenticate,
+  canAccess([Roles.ADMIN]),
+  (req: Request, res: Response, next: NextFunction) =>
+    tenantController.getById(req, res, next),
+);
+
 export default router;

@@ -16,4 +16,10 @@ export class TenantService {
   async getAll() {
     return this.tenantRepository.find();
   }
+
+  async getById(id: number) {
+    return this.tenantRepository.findBy({
+      id,
+    });
+  }
 }

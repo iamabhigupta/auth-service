@@ -55,4 +55,17 @@ export class TenantController {
       next(error);
     }
   }
+
+  async getById(req: CreateTenantRequest, res: Response, next: NextFunction) {
+    const tenantId = req.params.id;
+
+    try {
+      const tenant = await this.tenantService.getById(Number(tenantId));
+      this.logger.info("Tenant have been fetched", { id: tenantId });
+
+      res.status(201).json(tenant);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
