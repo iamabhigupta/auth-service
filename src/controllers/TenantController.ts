@@ -1,13 +1,11 @@
 import { NextFunction, Response } from "express";
+import { Logger } from "winston";
 
 import { TenantService } from "../services/TenantService";
-import { UserService } from "../services/UserService";
 import { CreateTenantRequest } from "../types";
-import { Logger } from "winston";
 
 export class TenantController {
   constructor(
-    private userService: UserService,
     private tenantService: TenantService,
     private logger: Logger,
   ) {}
