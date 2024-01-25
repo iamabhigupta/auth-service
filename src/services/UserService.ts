@@ -1,14 +1,14 @@
+import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
 import { Repository } from "typeorm";
-import bcrypt from "bcrypt";
+
 import { User } from "../entity/User";
 import { UserData } from "../types";
-import { Roles } from "../constants";
 
 export class UserService {
   constructor(private userRepository: Repository<User>) {}
 
-  async create({ firstName, lastName, email, password }: UserData) {
+  async create({ firstName, lastName, email, password, role }: UserData) {
     const user = await this.userRepository.findOne({ where: { email: email } });
 
     if (user) {
@@ -26,7 +26,7 @@ export class UserService {
         lastName,
         email,
         password: hashedPassword,
-        role: Roles.CUSTOMER,
+        role,
       });
     } catch (error) {
       const err = createHttpError(500, "Failed to store data in the database");
