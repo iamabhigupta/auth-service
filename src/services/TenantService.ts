@@ -22,4 +22,10 @@ export class TenantService {
       id,
     });
   }
+
+  async deleteById(id: number) {
+    return this.tenantRepository.delete({
+      id,
+    });
+  }
 }

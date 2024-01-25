@@ -1,4 +1,4 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Logger } from "winston";
 
 import { TenantService } from "../services/TenantService";
@@ -45,7 +45,7 @@ export class TenantController {
     }
   }
 
-  async getAll(req: CreateTenantRequest, res: Response, next: NextFunction) {
+  async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const tenants = await this.tenantService.getAll();
       this.logger.info("All tenant have been fetched");
@@ -56,7 +56,7 @@ export class TenantController {
     }
   }
 
-  async getById(req: CreateTenantRequest, res: Response, next: NextFunction) {
+  async getById(req: Request, res: Response, next: NextFunction) {
     const tenantId = req.params.id;
 
     try {
@@ -64,6 +64,19 @@ export class TenantController {
       this.logger.info("Tenant have been fetched", { id: tenantId });
 
       res.status(201).json(tenant);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteById(req: Request, res: Response, next: NextFunction) {
+    const tenantId = req.params.id;
+
+    try {
+      await this.tenantService.deleteById(Number(tenantId));
+      this.logger.info("Tenant have been deleted", { id: tenantId });
+
+      res.status(201).json({ id: tenantId });
     } catch (error) {
       next(error);
     }
