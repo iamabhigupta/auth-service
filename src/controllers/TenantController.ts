@@ -3,6 +3,7 @@ import { Logger } from "winston";
 
 import { TenantService } from "../services/TenantService";
 import { CreateTenantRequest } from "../types";
+import createHttpError from "http-errors";
 
 export class TenantController {
   constructor(
@@ -19,6 +20,26 @@ export class TenantController {
       this.logger.info("Tenant has been created", { id: tenant.id });
 
       res.status(201).json({ id: tenant.id });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async update(req: CreateTenantRequest, res: Response, next: NextFunction) {
+    const { name, address } = req.body;
+    const tenantId = req.params.id;
+
+    if (isNaN(Number(tenantId))) {
+      next(createHttpError(400, "Invalid url params"));
+    }
+
+    this.logger.debug("Request for updating a tenant", req.body);
+
+    try {
+      await this.tenantService.update(Number(tenantId), { name, address });
+      this.logger.info("Tenant has been updated", { id: tenantId });
+
+      res.status(201).json({ id: Number(tenantId) });
     } catch (error) {
       next(error);
     }
