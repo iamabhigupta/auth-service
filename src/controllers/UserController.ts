@@ -58,4 +58,16 @@ export class UserController {
       next(error);
     }
   }
+
+  async getAll(req: CreateUserRequest, res: Response, next: NextFunction) {
+    try {
+      const users = await this.userService.getAll();
+
+      this.logger.info("All users have been fetched");
+
+      res.json(users);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

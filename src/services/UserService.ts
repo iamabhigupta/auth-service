@@ -34,11 +34,12 @@ export class UserService {
     }
   }
 
-  async findByEmail(email: string) {
+  async findByEmailWithPassword(email: string) {
     return await this.userRepository.findOne({
       where: {
         email,
       },
+      select: ["id", "firstName", "lastName", "email", "role", "password"],
     });
   }
 
@@ -61,6 +62,18 @@ export class UserService {
       const err = createHttpError(
         500,
         "Failed to update the user in the database",
+      );
+      throw err;
+    }
+  }
+
+  async getAll() {
+    try {
+      return await this.userRepository.find();
+    } catch (error) {
+      const err = createHttpError(
+        500,
+        "Failed to get the user in the database",
       );
       throw err;
     }
