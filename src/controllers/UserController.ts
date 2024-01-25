@@ -70,4 +70,27 @@ export class UserController {
       next(error);
     }
   }
+
+  async getById(req: CreateUserRequest, res: Response, next: NextFunction) {
+    const userId = req.params.id;
+
+    if (isNaN(Number(userId))) {
+      next(createHttpError(400, "Invalid url param."));
+      return;
+    }
+
+    try {
+      const user = await this.userService.getById(Number(userId));
+
+      if (!user) {
+        next(createHttpError(400, "User does not exist."));
+        return;
+      }
+
+      this.logger.info("User has been fetched", { id: user.id });
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

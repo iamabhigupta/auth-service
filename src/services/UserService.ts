@@ -78,4 +78,18 @@ export class UserService {
       throw err;
     }
   }
+
+  async getById(id: number) {
+    try {
+      return await this.userRepository.findOneBy({
+        id,
+      });
+    } catch (error) {
+      const err = createHttpError(
+        500,
+        "Failed to get the user in the database",
+      );
+      throw err;
+    }
+  }
 }
