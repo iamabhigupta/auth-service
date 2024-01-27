@@ -1,4 +1,4 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import { Logger } from "winston";
 
@@ -59,7 +59,7 @@ export class UserController {
     }
   }
 
-  async getAll(req: CreateUserRequest, res: Response, next: NextFunction) {
+  async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await this.userService.getAll();
 
@@ -71,7 +71,7 @@ export class UserController {
     }
   }
 
-  async getById(req: CreateUserRequest, res: Response, next: NextFunction) {
+  async getById(req: Request, res: Response, next: NextFunction) {
     const userId = req.params.id;
 
     if (isNaN(Number(userId))) {
@@ -89,6 +89,24 @@ export class UserController {
 
       this.logger.info("User has been fetched", { id: user.id });
       res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async delete(req: Request, res: Response, next: NextFunction) {
+    const userId = req.params.id;
+
+    if (isNaN(Number(userId))) {
+      next(createHttpError(400, "Invalid url param."));
+      return;
+    }
+
+    try {
+      await this.userService.deleteById(Number(userId));
+
+      this.logger.info("User has been deleted", { id: Number(userId) });
+      res.json({ id: Number(userId) });
     } catch (error) {
       next(error);
     }
