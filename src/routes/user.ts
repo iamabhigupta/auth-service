@@ -8,6 +8,9 @@ import { UserController } from "../controllers/UserController";
 import authenticate from "../middlewares/authenticate";
 import { canAccess } from "../middlewares/canAccess";
 import { UserService } from "../services/UserService";
+import createUserValidator from "../validators/create-user-validator";
+import updateUserValidator from "../validators/update-user-validator";
+import { CreateUserRequest, UpdateUserRequest } from "../types";
 
 const router = express.Router();
 
@@ -19,16 +22,18 @@ const userController = new UserController(userService, logger);
 router.post(
   "/",
   authenticate,
+  createUserValidator,
   canAccess([Roles.ADMIN]),
-  (req: Request, res: Response, next: NextFunction) =>
+  (req: CreateUserRequest, res: Response, next: NextFunction) =>
     userController.create(req, res, next),
 );
 
 router.post(
   "/:id",
   authenticate,
+  updateUserValidator,
   canAccess([Roles.ADMIN]),
-  (req: Request, res: Response, next: NextFunction) =>
+  (req: UpdateUserRequest, res: Response, next: NextFunction) =>
     userController.update(req, res, next),
 );
 

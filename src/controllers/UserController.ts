@@ -4,7 +4,7 @@ import { Logger } from "winston";
 
 import { Roles } from "../constants";
 import { UserService } from "../services/UserService";
-import { CreateUserRequest } from "../types";
+import { CreateUserRequest, UpdateUserRequest } from "../types";
 
 export class UserController {
   constructor(
@@ -33,7 +33,7 @@ export class UserController {
     }
   }
 
-  async update(req: CreateUserRequest, res: Response, next: NextFunction) {
+  async update(req: UpdateUserRequest, res: Response, next: NextFunction) {
     const { firstName, lastName, role } = req.body;
     const userId = req.params.id;
 

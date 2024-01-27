@@ -47,3 +47,7 @@ export interface LimitedUserData {
   lastName: string;
   role: string;
 }
+
+export interface UpdateUserRequest extends Request {
+  body: LimitedUserData;
+}
