@@ -13,7 +13,7 @@ export class UserController {
   ) {}
 
   async create(req: CreateUserRequest, res: Response, next: NextFunction) {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, tenantId } = req.body;
     this.logger.debug("Request for creating user", req.body);
 
     try {
@@ -23,6 +23,7 @@ export class UserController {
         email,
         password,
         role: Roles.MANAGER,
+        tenantId,
       });
 
       this.logger.info("User has been created by ADMIN", { id: user.id });
