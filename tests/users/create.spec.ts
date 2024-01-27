@@ -6,6 +6,7 @@ import { User } from "../../src/entity/User";
 import { Roles } from "../../src/constants";
 import createJWKSMock from "mock-jwks";
 import { Tenant } from "../../src/entity/Tenant";
+import { createTenant } from "../utils";
 
 describe("POST /users", () => {
   let connection: DataSource;
@@ -34,11 +35,7 @@ describe("POST /users", () => {
   describe("Given all fields", () => {
     it("should persist the user in the database", async () => {
       // Create tenant first
-      const tenantRepository = connection.getRepository(Tenant);
-      const tenant = await tenantRepository.save({
-        name: "Test tenant",
-        address: "Test address",
-      });
+      const tenant = await createTenant(connection.getRepository(Tenant));
 
       // Register user
       const adminToken = jwks.token({ sub: "1", role: Roles.ADMIN });
@@ -67,11 +64,7 @@ describe("POST /users", () => {
 
     it("should create a manager user", async () => {
       // Create tenant
-      const tenantRepository = connection.getRepository(Tenant);
-      const tenant = await tenantRepository.save({
-        name: "Test tenant",
-        address: "Test address",
-      });
+      const tenant = await createTenant(connection.getRepository(Tenant));
 
       // Register user
       const adminToken = jwks.token({ sub: "1", role: Roles.ADMIN });
@@ -98,6 +91,9 @@ describe("POST /users", () => {
       expect(users[0].role).toBe(Roles.MANAGER);
     });
 
-    it.todo("should return 403 if non admin user tries to create a user");
+    // it.todo(
+    //   "should return 403 if non admin user tries to create a user",
+    //   async () => {},
+    // );
   });
 });
