@@ -91,9 +91,34 @@ describe("POST /users", () => {
       expect(users[0].role).toBe(Roles.MANAGER);
     });
 
-    // it.todo(
-    //   "should return 403 if non admin user tries to create a user",
-    //   async () => {},
-    // );
+    it("should return 403 if non admin user tries to create a user", async () => {
+      // Create tenant
+      const tenant = await createTenant(connection.getRepository(Tenant));
+
+      // Create non-admin token
+      const nonAdminToken = jwks.token({ sub: "1", role: Roles.CUSTOMER });
+
+      const userData = {
+        firstName: "Abhishek",
+        lastName: "Gupta",
+        email: "abhishek@codersgyan.com",
+        password: "password",
+        tenantID: tenant.id,
+        role: Roles.MANAGER,
+      };
+
+      // Add token to cookie
+      const response = await request(app)
+        .post("/users")
+        .set("Cookie", `accessToken=${nonAdminToken}`)
+        .send(userData);
+
+      expect(response.statusCode).toBe(403);
+
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+
+      expect(users).toHaveLength(0);
+    });
   });
 });
