@@ -2,3 +2,4 @@ dist
 node_module
 tests/
 *.spec.ts
+.github
