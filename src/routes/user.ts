@@ -1,4 +1,9 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, {
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response,
+} from "express";
 
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/User";
@@ -21,44 +26,44 @@ const userController = new UserController(userService, logger);
 
 router.post(
   "/",
-  authenticate,
+  authenticate as RequestHandler,
   createUserValidator,
   canAccess([Roles.ADMIN]),
   (req: CreateUserRequest, res: Response, next: NextFunction) =>
-    userController.create(req, res, next),
+    userController.create(req, res, next) as unknown as RequestHandler,
 );
 
 router.post(
   "/:id",
-  authenticate,
+  authenticate as RequestHandler,
   updateUserValidator,
   canAccess([Roles.ADMIN]),
   (req: UpdateUserRequest, res: Response, next: NextFunction) =>
-    userController.update(req, res, next),
+    userController.update(req, res, next) as unknown as RequestHandler,
 );
 
 router.get(
   "/",
-  authenticate,
+  authenticate as RequestHandler,
   canAccess([Roles.ADMIN]),
   (req: Request, res: Response, next: NextFunction) =>
-    userController.getAll(req, res, next),
+    userController.getAll(req, res, next) as unknown as RequestHandler,
 );
 
 router.get(
   "/:id",
-  authenticate,
+  authenticate as RequestHandler,
   canAccess([Roles.ADMIN]),
   (req: Request, res: Response, next: NextFunction) =>
-    userController.getAll(req, res, next),
+    userController.getAll(req, res, next) as unknown as RequestHandler,
 );
 
 router.delete(
   "/:id",
-  authenticate,
+  authenticate as RequestHandler,
   canAccess([Roles.ADMIN]),
   (req: Request, res: Response, next: NextFunction) =>
-    userController.getAll(req, res, next),
+    userController.getAll(req, res, next) as unknown as RequestHandler,
 );
 
 export default router;
