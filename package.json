@@ -21,10 +21,13 @@
    "author": "Abhishek Gupta",
    "license": "ISC",
    "devDependencies": {
+      "@types/bcryptjs": "^2.4.6",
       "@types/cookie-parser": "^1.4.6",
+      "@types/cors": "^2.8.17",
       "@types/express": "^4.17.21",
       "@types/http-errors": "^2.0.4",
       "@types/jest": "^29.5.8",
+      "@types/jsonwebtoken": "^9.0.5",
       "@types/node": "^16.11.10",
       "@types/supertest": "^2.0.16",
       "@types/winston": "^2.4.4",
@@ -51,10 +54,9 @@
       ]
    },
    "dependencies": {
-      "@types/bcrypt": "^5.0.2",
-      "@types/jsonwebtoken": "^9.0.5",
-      "bcrypt": "^5.1.1",
+      "bcryptjs": "^2.4.3",
       "cookie-parser": "^1.4.6",
+      "cors": "^2.8.5",
       "dotenv": "^16.3.1",
       "express": "^4.18.2",
       "express-jwt": "^8.4.1",
