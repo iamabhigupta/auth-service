@@ -8,10 +8,7 @@ export const canAccess = (roles: string[]) => {
     const roleFromToken = _req.auth;
 
     if (!roles.includes(roleFromToken.role)) {
-      const error = createHttpError(
-        403,
-        "User is not allowed to create tenant",
-      );
+      const error = createHttpError(403, "You don't have enough permissions");
       next(error);
       return;
     }
