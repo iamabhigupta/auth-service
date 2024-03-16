@@ -1,9 +1,4 @@
-import express, {
-  NextFunction,
-  Request,
-  RequestHandler,
-  Response,
-} from "express";
+import express, { NextFunction, RequestHandler, Response } from "express";
 
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/User";
@@ -16,6 +11,8 @@ import { UserService } from "../services/UserService";
 import createUserValidator from "../validators/create-user-validator";
 import updateUserValidator from "../validators/update-user-validator";
 import { CreateUserRequest, UpdateUserRequest } from "../types";
+import listUsersValidator from "../validators/list-users-validator";
+import { Request } from "express-jwt";
 
 const router = express.Router();
 
@@ -46,6 +43,7 @@ router.get(
   "/",
   authenticate as RequestHandler,
   canAccess([Roles.ADMIN]),
+  listUsersValidator,
   (req: Request, res: Response, next: NextFunction) =>
     userController.getAll(req, res, next) as unknown as RequestHandler,
 );

@@ -3,7 +3,7 @@ import createHttpError from "http-errors";
 import { Repository } from "typeorm";
 
 import { User } from "../entity/User";
-import { LimitedUserData, UserData } from "../types";
+import { LimitedUserData, UserData, UserQueryParams } from "../types";
 
 export class UserService {
   constructor(private userRepository: Repository<User>) {}
@@ -78,16 +78,15 @@ export class UserService {
     }
   }
 
-  async getAll() {
-    try {
-      return await this.userRepository.find();
-    } catch (error) {
-      const err = createHttpError(
-        500,
-        "Failed to get the user in the database",
-      );
-      throw err;
-    }
+  async getAll(validatedQuery: UserQueryParams) {
+    const { currentPage, perPage } = validatedQuery;
+    const queryBuilder = this.userRepository.createQueryBuilder();
+    const result = await queryBuilder
+      .skip((currentPage - 1) * perPage)
+      .take(perPage)
+      .getManyAndCount();
+
+    return result;
   }
 
   async getById(id: number) {
