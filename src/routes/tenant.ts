@@ -15,6 +15,7 @@ import authenticate from "../middlewares/authenticate";
 import { canAccess } from "../middlewares/canAccess";
 import tenantValidator from "../validators/tenant-validator";
 import { CreateTenantRequest } from "../types";
+import listTenantValidator from "../validators/list-tenant-validator";
 
 const router = express.Router();
 
@@ -43,6 +44,7 @@ router.patch(
 
 router.get(
   "/",
+  listTenantValidator,
   (req: Request, res: Response, next: NextFunction) =>
     tenantController.getAll(req, res, next) as unknown as RequestHandler,
 );
