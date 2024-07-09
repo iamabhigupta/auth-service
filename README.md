@@ -1,1 +1,0 @@
-My Auth Service
