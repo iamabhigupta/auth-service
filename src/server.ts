@@ -1,5 +1,6 @@
-const login = (username: string): string => {
-   return username;
-};
+function abhi(a: string) {
+   const ab = a;
+   return ab;
+}
 
-login("Abhsihek");
+abhi("a");
