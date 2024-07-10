@@ -4,12 +4,15 @@
   "description": "It is a auth service",
   "main": "index.js",
   "scripts": {
-    "dev": "node src/server.js"
+    "dev": "node src/server.js",
+    "format:check": "prettier . --check",
+    "format:fix": "prettier . --write"
   },
   "author": "Abhishek",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.14.10",
+    "prettier": "3.3.2",
     "typescript": "^5.5.3"
   }
 }
