@@ -1,9 +1,9 @@
 import request from "supertest";
-import app from "../../src/app";
 import { DataSource } from "typeorm";
+import app from "../../src/app";
 import { AppDataSource } from "../../src/config/data-source";
-import { truncateTables } from "../utils";
 import { User } from "../../src/entity/User";
+import { Roles } from "../../src/constants";
 
 describe("POST /auth/register", () => {
    let db: DataSource;
@@ -14,7 +14,8 @@ describe("POST /auth/register", () => {
 
    beforeEach(async () => {
       // Databse truncate
-      await truncateTables(db);
+      await db.dropDatabase();
+      await db.synchronize();
    });
 
    afterAll(async () => {
@@ -85,6 +86,22 @@ describe("POST /auth/register", () => {
          const userRepository = db.getRepository(User);
          const users = await userRepository.find();
          expect((res.body as Record<string, string>).id).toBe(users[0].id);
+      });
+      it("should assign a customer tole", async () => {
+         // Arange
+         const userData = {
+            firstName: "Abhishek",
+            lastName: "Gupta",
+            email: "abhi@abhi.com",
+            password: "password",
+         };
+         // Act
+         await request(app).post("/auth/register").send(userData);
+         // Assert
+         const userRepository = db.getRepository(User);
+         const users = await userRepository.find();
+         expect(users[0]).toHaveProperty("role");
+         expect(users[0].role).toBe(Roles.CUSTOMER);
       });
    });
    describe("Fields are missing", () => {});
