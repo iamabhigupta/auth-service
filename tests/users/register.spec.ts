@@ -37,6 +37,7 @@ describe("POST /auth/register", () => {
          // Assert
          expect(res.statusCode).toBe(201);
       });
+
       it("should return valid json response", async () => {
          // Arange
          const userData = {
@@ -52,6 +53,7 @@ describe("POST /auth/register", () => {
             expect.stringContaining("json"),
          );
       });
+
       it("should return valid json response", async () => {
          // Arange
          const userData = {
@@ -71,6 +73,7 @@ describe("POST /auth/register", () => {
          expect(users[0].lastName).toBe(userData.lastName);
          expect(users[0].email).toBe(userData.email);
       });
+
       it("should return the id of the created user", async () => {
          // Arange
          const userData = {
@@ -87,6 +90,7 @@ describe("POST /auth/register", () => {
          const users = await userRepository.find();
          expect((res.body as Record<string, string>).id).toBe(users[0].id);
       });
+
       it("should assign a customer tole", async () => {
          // Arange
          const userData = {
@@ -102,6 +106,25 @@ describe("POST /auth/register", () => {
          const users = await userRepository.find();
          expect(users[0]).toHaveProperty("role");
          expect(users[0].role).toBe(Roles.CUSTOMER);
+      });
+
+      it("should store the hashed password", async () => {
+         // Arange
+         const userData = {
+            firstName: "Abhishek",
+            lastName: "Gupta",
+            email: "abhi@abhi.com",
+            password: "password",
+         };
+         // Act
+         await request(app).post("/auth/register").send(userData);
+         // Assert
+         const userRepository = db.getRepository(User);
+         const users = await userRepository.find();
+
+         expect(users[0].password).not.toBe(userData.password);
+         expect(users[0].password).toHaveLength(60);
+         expect(users[0].password).toMatch(/^\$2b\$\d+\$/);
       });
    });
    describe("Fields are missing", () => {});
