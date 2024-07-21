@@ -4,8 +4,8 @@ import { UserService } from "../services/UserService";
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/User";
 import logger from "../config/logger";
-import { validateRequest } from "../middlewares/validateRequest";
 import { registerSchema } from "../validators/registerSchema";
+import { validateRequest } from "../middlewares/validator";
 
 const router = express.Router();
 
