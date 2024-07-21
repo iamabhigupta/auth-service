@@ -5,30 +5,30 @@ export default checkSchema({
       trim: true,
       errorMessage: "Email is required!",
       notEmpty: true,
-      // isEmail: {
-      //    errorMessage: "Email should be a valid email",
-      // },
+      isEmail: {
+         errorMessage: "Email should be a valid email",
+      },
    },
-   // firstName: {
-   //    errorMessage: "First name is required!",
-   //    notEmpty: true,
-   //    trim: true,
-   // },
-   // lastName: {
-   //    errorMessage: "Last name is required!",
-   //    notEmpty: true,
-   //    trim: true,
-   // },
-   // password: {
-   //    trim: true,
-   //    errorMessage: "Last name is required!",
-   //    notEmpty: true,
-   //    isLength: {
-   //       options: {
-   //          min: 8,
-   //       },
-   //       errorMessage: "Password length should be at least 8 chars!",
-   //    },
-   // },
+   firstName: {
+      errorMessage: "First name is required!",
+      notEmpty: true,
+      trim: true,
+   },
+   lastName: {
+      errorMessage: "Last name is required!",
+      notEmpty: true,
+      trim: true,
+   },
+   password: {
+      trim: true,
+      errorMessage: "Last name is required!",
+      notEmpty: true,
+      isLength: {
+         options: {
+            min: 8,
+         },
+         errorMessage: "Password length should be at least 8 chars!",
+      },
+   },
 });
 // export default [body("email").notEmpty().withMessage("Email is required!")];
