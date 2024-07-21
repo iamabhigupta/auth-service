@@ -2,6 +2,7 @@ import { NextFunction, Response } from "express";
 import { UserService } from "../services/UserService";
 import { RegisterUserRequest } from "../types";
 import { Logger } from "winston";
+import createHttpError from "http-errors";
 
 export class AuthController {
    userService: UserService;
@@ -14,6 +15,12 @@ export class AuthController {
    }
    async register(req: RegisterUserRequest, res: Response, next: NextFunction) {
       const { firstName, lastName, email, password } = req.body;
+
+      if (!email) {
+         next(createHttpError(400, "Email is required"));
+         return;
+      }
+
       this.logger.debug("New request to register a user", {
          firstName,
          lastName,
