@@ -4,7 +4,7 @@ import { UserService } from "../services/UserService";
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/User";
 import logger from "../config/logger";
-import { body } from "express-validator";
+import registerValidator from "../validators/registerValidator";
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ const authController = new AuthController(userService, logger);
 
 router.post(
    "/register",
-   [body("email").notEmpty(), body("firstName").notEmpty()],
+   registerValidator,
    (req: Request, res: Response, next: NextFunction) =>
       authController.register(req, res, next),
 );

@@ -158,7 +158,10 @@ describe("POST /auth/register", () => {
          // Act
          const res = await request(app).post("/auth/register").send(userData);
          // Assert
+         const repository = db.getRepository(User);
+         const users = await repository.find();
          expect(res.statusCode).toBe(400);
+         expect(users).toHaveLength(0);
       });
    });
 });
