@@ -1,11 +1,10 @@
 import express, { NextFunction, Request, Response } from "express";
-import { AuthController } from "../controllers/AuthController";
-import { UserService } from "../services/UserService";
 import { AppDataSource } from "../config/data-source";
-import { User } from "../entity/User";
 import logger from "../config/logger";
-import { registerSchema } from "../validators/registerSchema";
-import { validateRequest } from "../middlewares/validator";
+import { AuthController } from "../controllers/AuthController";
+import { User } from "../entity/User";
+import { UserService } from "../services/UserService";
+import registerValidator from "../validators/register-validator";
 
 const router = express.Router();
 
@@ -15,7 +14,7 @@ const authController = new AuthController(userService, logger);
 
 router.post(
    "/register",
-   validateRequest(registerSchema),
+   registerValidator,
    (req: Request, res: Response, next: NextFunction) =>
       authController.register(req, res, next),
 );
